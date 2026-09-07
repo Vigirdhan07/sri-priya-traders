@@ -1,0 +1,604 @@
+.admin-price-list-page {
+  padding: 42px 68px 70px;
+  background: #fff8f0;
+  min-height: calc(100vh - 82px);
+  box-sizing: border-box;
+}
+
+.admin-price-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 30px;
+  margin-bottom: 28px;
+}
+
+.admin-section-label {
+  display: block;
+  color: #8b1020;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+}
+
+.admin-price-list-header h1 {
+  margin: 0;
+  font-size: 44px;
+  line-height: 1;
+  color: #181818;
+  font-weight: 900;
+}
+
+.admin-price-list-header p {
+  margin: 12px 0 0;
+  color: #6b6b6b;
+  font-size: 17px;
+}
+
+.refresh-price-list-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px 22px;
+  background: #ffffff;
+  color: #8b1020;
+  border: 1px solid #eadbd2;
+  border-radius: 13px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.refresh-price-list-button:hover {
+  background: #fff4e9;
+  border-color: #8b1020;
+}
+
+.refresh-price-list-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loading-icon {
+  animation: priceListSpin 0.9s linear infinite;
+}
+
+@keyframes priceListSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* MESSAGES */
+
+.price-list-success,
+.price-list-error,
+.price-list-warning,
+.price-list-progress {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  margin-bottom: 18px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.price-list-success {
+  background: #eaf8ef;
+  border: 1px solid #b9e5c8;
+  color: #08752f;
+}
+
+.price-list-error {
+  background: #fff0f0;
+  border: 1px solid #efbebe;
+  color: #b31919;
+}
+
+.price-list-warning {
+  background: #fff8df;
+  border: 1px solid #f0d27d;
+  color: #8a6500;
+}
+
+.price-list-progress {
+  background: #f7edf0;
+  border: 1px solid #e6cbd1;
+  color: #8b1020;
+}
+
+/* MAIN CARDS */
+
+.price-list-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(350px, 0.85fr);
+  gap: 26px;
+}
+
+.price-list-card {
+  background: #ffffff;
+  border: 1px solid #eadbd2;
+  border-radius: 22px;
+  padding: 30px;
+  box-sizing: border-box;
+  box-shadow: 0 8px 28px rgba(90, 20, 25, 0.05);
+}
+
+.price-list-card-header {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  margin-bottom: 24px;
+}
+
+.price-list-icon {
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff0f4;
+  color: #8b1020;
+  border-radius: 15px;
+}
+
+.price-list-card-header h2 {
+  margin: 0;
+  color: #171717;
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.price-list-card-header p {
+  margin: 5px 0 0;
+  color: #777777;
+  font-size: 15px;
+}
+
+/* EXCEL UPLOAD */
+
+.excel-upload-area {
+  min-height: 270px;
+  border: 2px dashed #e8c8bc;
+  border-radius: 18px;
+  background: #fffbf7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px;
+  box-sizing: border-box;
+  cursor: pointer;
+  color: #8b1020;
+  transition: 0.2s ease;
+}
+
+.excel-upload-area:hover {
+  border-color: #8b1020;
+  background: #fff7ee;
+}
+
+.excel-upload-area > svg {
+  margin-bottom: 18px;
+}
+
+.excel-upload-area strong {
+  display: block;
+  max-width: 90%;
+  color: #171717;
+  font-size: 18px;
+  font-weight: 900;
+  word-break: break-word;
+}
+
+.excel-upload-area > span:not(.choose-excel-button) {
+  margin-top: 7px;
+  color: #777777;
+  font-size: 14px;
+}
+
+.choose-excel-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 13px 20px;
+  border-radius: 10px;
+  background: #8b1020;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.excel-upload-area:hover .choose-excel-button {
+  background: #4a0710;
+}
+
+.download-template-button {
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border-radius: 12px;
+  border: 1px solid #eadbd2;
+  background: #ffffff;
+  color: #8b1020;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.download-template-button:hover {
+  background: #fff5ec;
+  border-color: #8b1020;
+}
+
+/* AUTOMATIC PRICING */
+
+.global-discount-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 25px;
+  border: 1px solid #f0cf72;
+  border-radius: 17px;
+  background: #fff5d8;
+  color: #8b1020;
+}
+
+.global-discount-box > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.global-discount-box span {
+  max-width: 210px;
+  font-size: 17px;
+  line-height: 1.35;
+  font-weight: 900;
+}
+
+.global-discount-box strong {
+  font-size: 37px;
+  line-height: 1;
+  color: #8b1020;
+}
+
+.pricing-example {
+  margin-top: 22px;
+  padding: 25px;
+  border: 1px solid #eadbd2;
+  border-radius: 17px;
+  background: #fffdfb;
+}
+
+.pricing-example > div:not(.pricing-arrow) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.pricing-example span {
+  color: #6d6d6d;
+  font-size: 15px;
+}
+
+.pricing-example strong {
+  color: #171717;
+  font-size: 19px;
+}
+
+.pricing-arrow {
+  margin: 12px 0;
+  text-align: center;
+  color: #8b1020;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.pricing-note {
+  margin: 18px 0 0;
+  color: #707070;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.pricing-note strong {
+  color: #8b1020;
+}
+
+/* PREVIEW */
+
+.price-preview-section {
+  margin-top: 28px;
+  background: #ffffff;
+  border: 1px solid #eadbd2;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(90, 20, 25, 0.05);
+}
+
+.price-preview-header {
+  padding: 28px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  border-bottom: 1px solid #eadbd2;
+}
+
+.price-preview-header h2 {
+  margin: 0;
+  color: #171717;
+  font-size: 27px;
+  font-weight: 900;
+}
+
+.price-preview-header p {
+  margin: 7px 0 0;
+  color: #777777;
+  font-size: 15px;
+}
+
+.preview-stats {
+  display: flex;
+  gap: 12px;
+}
+
+.preview-stats > div {
+  min-width: 90px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #fff7ed;
+  border: 1px solid #eadbd2;
+  text-align: center;
+}
+
+.preview-stats strong {
+  display: block;
+  color: #8b1020;
+  font-size: 20px;
+}
+
+.preview-stats span {
+  display: block;
+  margin-top: 3px;
+  color: #777777;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* TABLE */
+
+.price-preview-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.price-preview-table {
+  width: 100%;
+  min-width: 1050px;
+  border-collapse: collapse;
+}
+
+.price-preview-table th {
+  padding: 15px 14px;
+  background: #fff7ef;
+  color: #5c5552;
+  border-bottom: 1px solid #eadbd2;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.price-preview-table td {
+  padding: 15px 14px;
+  border-bottom: 1px solid #f0e5df;
+  color: #333333;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.price-preview-table tbody tr:hover {
+  background: #fffaf5;
+}
+
+.price-preview-table td strong {
+  color: #8b1020;
+}
+
+.discount-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: #ffe1eb;
+  color: #d82f65;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.customer-price {
+  color: #8b1020 !important;
+  font-size: 15px;
+}
+
+.missing-rate {
+  color: #b31919;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* UPDATE FOOTER */
+
+.price-update-footer {
+  padding: 23px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  background: #fffaf6;
+  border-top: 1px solid #eadbd2;
+}
+
+.price-update-footer > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.price-update-footer strong {
+  color: #171717;
+  font-size: 17px;
+}
+
+.price-update-footer span {
+  color: #777777;
+  font-size: 14px;
+}
+
+.confirm-price-update-button {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 14px 22px;
+  border: none;
+  border-radius: 12px;
+  background: #8b1020;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.confirm-price-update-button:hover {
+  background: #4a0710;
+  transform: translateY(-1px);
+}
+
+.confirm-price-update-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+  .admin-price-list-page {
+    padding: 35px 35px 60px;
+  }
+
+  .price-list-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .price-preview-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 760px) {
+  .admin-price-list-page {
+    padding: 25px 18px 50px;
+  }
+
+  .admin-price-list-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-price-list-header h1 {
+    font-size: 36px;
+  }
+
+  .refresh-price-list-button {
+    width: 100%;
+  }
+
+  .price-list-card {
+    padding: 22px;
+  }
+
+  .price-list-card-header h2 {
+    font-size: 21px;
+  }
+
+  .global-discount-box {
+    padding: 20px;
+  }
+
+  .preview-stats {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .price-update-footer {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 22px;
+  }
+
+  .confirm-price-update-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-price-list-page {
+    padding: 22px 14px 45px;
+  }
+
+  .admin-price-list-header h1 {
+    font-size: 32px;
+  }
+
+  .admin-price-list-header p {
+    font-size: 15px;
+  }
+
+  .price-list-card {
+    padding: 18px;
+    border-radius: 17px;
+  }
+
+  .price-list-card-header {
+    gap: 12px;
+  }
+
+  .price-list-icon {
+    width: 46px;
+    height: 46px;
+  }
+
+  .excel-upload-area {
+    min-height: 230px;
+    padding: 20px;
+  }
+
+  .global-discount-box strong {
+    font-size: 30px;
+  }
+}

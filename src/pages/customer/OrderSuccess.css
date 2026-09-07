@@ -1,0 +1,156 @@
+.order-success-page {
+  min-height: calc(100vh - 130px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 20px;
+  background: var(--cream);
+}
+
+.order-success-card {
+  width: min(100%, 620px);
+  padding: 45px 35px;
+  text-align: center;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 15px 45px rgba(74, 7, 16, 0.1);
+}
+
+.success-icon {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #eaf8ed;
+  color: #198754;
+}
+
+.success-label {
+  color: var(--pink);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+}
+
+.order-success-card h1 {
+  margin-top: 8px;
+  color: var(--primary-dark);
+  font-size: 32px;
+  font-weight: 1000;
+}
+
+.order-success-card > p {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.order-number-box {
+  margin-top: 25px;
+  padding: 17px;
+  border: 1px dashed var(--gold);
+  border-radius: 12px;
+  background: #fffaf0;
+}
+
+.order-number-box span,
+.success-total span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.order-number-box strong {
+  display: block;
+  margin-top: 5px;
+  color: var(--primary);
+  font-size: 20px;
+  font-weight: 1000;
+  letter-spacing: 0.5px;
+}
+
+.success-total {
+  margin-top: 15px;
+}
+
+.success-total strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--primary);
+  font-size: 25px;
+  font-weight: 1000;
+}
+
+.success-whatsapp {
+  margin-top: 25px;
+  padding: 15px;
+  border-radius: 12px;
+  background: #fff8df;
+  text-align: left;
+}
+
+.success-whatsapp strong {
+  color: var(--dark);
+  font-size: 14px;
+}
+
+.success-whatsapp p {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.success-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.success-shop-button,
+.success-home-button {
+  flex: 1;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-radius: 9px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.success-shop-button {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.success-home-button {
+  border: 1px solid var(--border);
+  color: var(--primary);
+  background: var(--white);
+}
+
+@media (max-width: 500px) {
+  .order-success-page {
+    padding: 30px 15px;
+  }
+
+  .order-success-card {
+    padding: 35px 20px;
+  }
+
+  .order-success-card h1 {
+    font-size: 27px;
+  }
+
+  .success-actions {
+    flex-direction: column;
+  }
+}

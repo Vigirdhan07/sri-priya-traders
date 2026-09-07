@@ -1,0 +1,208 @@
+.featured-products-section {
+  width: 100%;
+  padding: 70px 5% 80px;
+  background: #fff8f0;
+}
+
+.featured-heading {
+  max-width: 1250px;
+  margin: 0 auto 35px;
+  text-align: center;
+}
+
+.featured-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #e83e74;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.featured-heading h2 {
+  margin: 0;
+  color: #4a0710;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.featured-heading h2 span {
+  color: #e83e74;
+}
+
+.featured-heading p {
+  max-width: 650px;
+  margin: 14px auto 0;
+  color: #6b6b6b;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.featured-products-grid {
+  width: 100%;
+  max-width: 1250px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+
+  align-items: stretch;
+}
+
+/*
+  Keep the ProductCard inside each grid column.
+*/
+.featured-products-grid .product-card {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+/*
+  Make the four cards visually consistent.
+*/
+.featured-products-grid .product-image-container {
+  width: 100%;
+}
+
+.featured-products-grid .product-image {
+  max-width: 100%;
+}
+
+/* Loading */
+.featured-loading {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 50px 20px;
+  text-align: center;
+
+  color: #8b1020;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* Empty */
+.featured-empty {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 50px 20px;
+
+  border: 1px solid #eadbd2;
+  border-radius: 18px;
+
+  background: #ffffff;
+  color: #6b6b6b;
+
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Bottom button area */
+.featured-bottom {
+  display: flex;
+  justify-content: center;
+  margin-top: 42px;
+}
+
+.featured-view-all {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  min-width: 230px;
+  padding: 15px 28px;
+
+  background: #8b1020;
+  color: #ffffff;
+
+  border: 2px solid #8b1020;
+  border-radius: 10px;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+
+  box-shadow: 0 8px 20px rgba(139, 16, 32, 0.18);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.featured-view-all span {
+  font-size: 21px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.featured-view-all:hover {
+  background: #4a0710;
+  border-color: #4a0710;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(139, 16, 32, 0.25);
+}
+
+.featured-view-all:hover span {
+  transform: translateX(4px);
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1050px) {
+  .featured-products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .featured-products-section {
+    padding-left: 4%;
+    padding-right: 4%;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 650px) {
+  .featured-products-section {
+    padding: 50px 16px 60px;
+  }
+
+  .featured-heading {
+    margin-bottom: 28px;
+  }
+
+  .featured-heading h2 {
+    font-size: 32px;
+  }
+
+  .featured-heading p {
+    font-size: 14px;
+  }
+
+  .featured-products-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .featured-bottom {
+    margin-top: 30px;
+  }
+
+  .featured-view-all {
+    width: 100%;
+    max-width: 320px;
+  }
+}

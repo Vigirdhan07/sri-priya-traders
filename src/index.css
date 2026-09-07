@@ -1,0 +1,59 @@
+:root {
+  --primary: #8b1020;
+  --primary-dark: #4a0710;
+  --pink: #e83e74;
+  --pink-light: #ff5c93;
+  --gold: #f5b700;
+  --gold-light: #ffd447;
+  --dark: #111111;
+  --cream: #fff8f0;
+  --white: #ffffff;
+  --text: #242424;
+  --muted: #6b6b6b;
+  --border: #eadbd2;
+
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+
+  color: var(--text);
+  background: var(--cream);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--cream);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
