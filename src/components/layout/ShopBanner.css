@@ -1,0 +1,106 @@
+.shop-banner-section {
+  width: 100%;
+  padding: 55px 20px 65px;
+  background: var(--cream);
+  overflow: hidden;
+}
+
+.shop-banner-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.shop-banner-glow {
+  position: relative;
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow:
+    0 15px 45px rgba(74, 7, 16, 0.18),
+    0 0 0 1px rgba(139, 16, 32, 0.08);
+  animation: shopBannerAppear 1s ease-out both;
+}
+
+.shop-banner-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow:
+    0 0 0 1px rgba(245, 183, 0, 0.28),
+    0 0 35px rgba(245, 183, 0, 0.14);
+}
+
+.shop-banner-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transform: scale(1.015);
+  animation: shopBannerZoom 8s ease-in-out infinite alternate;
+  transition: transform 0.6s ease;
+}
+
+.shop-banner-glow:hover .shop-banner-image {
+  transform: scale(1.035);
+}
+
+@keyframes shopBannerAppear {
+  from {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shopBannerZoom {
+  from {
+    transform: scale(1.015);
+  }
+
+  to {
+    transform: scale(1.035);
+  }
+}
+
+@media (max-width: 768px) {
+  .shop-banner-section {
+    padding: 35px 12px 45px;
+  }
+
+  .shop-banner-glow {
+    border-radius: 12px;
+  }
+
+  .shop-banner-image {
+    transform: scale(1.01);
+    animation: shopBannerZoomMobile 7s ease-in-out infinite alternate;
+  }
+
+  @keyframes shopBannerZoomMobile {
+    from {
+      transform: scale(1.01);
+    }
+
+    to {
+      transform: scale(1.025);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .shop-banner-section {
+    padding: 25px 10px 35px;
+  }
+
+  .shop-banner-glow {
+    border-radius: 10px;
+  }
+}

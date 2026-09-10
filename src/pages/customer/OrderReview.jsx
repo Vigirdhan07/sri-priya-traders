@@ -137,7 +137,7 @@ function OrderReview() {
       });
 
       const ownerWhatsAppNumber =
-        "916379660799";
+        "919965093000"
 
       const message = [
         "🔥 SRI PRIYA TRADERS - NEW ORDER",
