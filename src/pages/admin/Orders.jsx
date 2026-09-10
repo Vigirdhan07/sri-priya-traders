@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import {
   Search,
   Eye,
@@ -9,13 +10,16 @@ import {
   Package,
   User,
   MapPin,
-  Phone,
-  Mail,
   CalendarDays,
   ChevronDown,
 } from "lucide-react";
+
 import * as XLSX from "xlsx";
+
 import { supabase } from "../../services/supabase";
+
+import { downloadOrderBillPdf } from "../../services/billPdfService";
+
 import "./Orders.css";
 
 const ORDER_STATUSES = [
@@ -31,28 +35,21 @@ const ORDER_STATUSES = [
 
 function Orders() {
   const [orders, setOrders] = useState([]);
-  const [filteredOrders, setFilteredOrders] =
-    useState([]);
+  const [filteredOrders, setFilteredOrders] = useState([]);
 
   const [search, setSearch] = useState("");
 
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] =
-    useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const [error, setError] = useState("");
 
-  const [selectedOrder, setSelectedOrder] =
-    useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orderItems, setOrderItems] = useState([]);
 
-  const [orderItems, setOrderItems] =
-    useState([]);
+  const [loadingDetails, setLoadingDetails] = useState(false);
 
-  const [loadingDetails, setLoadingDetails] =
-    useState(false);
-
-  const [updatingStatus, setUpdatingStatus] =
-    useState(false);
+  const [updatingStatus, setUpdatingStatus] = useState(false);
 
   async function loadOrders(showRefresh = false) {
     try {
@@ -64,32 +61,29 @@ function Orders() {
 
       setError("");
 
-      const { data, error: ordersError } =
-        await supabase
-          .from("orders")
-          .select(
-            `
-              id,
-              order_number,
-              customer_name,
-              mobile_number,
-              email,
-              state,
-              city,
-              address,
-              subtotal,
-              discount_percentage,
-              discount_amount,
-              packing_charge,
-              grand_total,
-              order_status,
-              created_at,
-              updated_at
-            `
-          )
-          .order("created_at", {
-            ascending: false,
-          });
+      const { data, error: ordersError } = await supabase
+        .from("orders")
+        .select(`
+          id,
+          order_number,
+          customer_name,
+          mobile_number,
+          email,
+          state,
+          city,
+          address,
+          subtotal,
+          discount_percentage,
+          discount_amount,
+          packing_charge,
+          grand_total,
+          order_status,
+          created_at,
+          updated_at
+        `)
+        .order("created_at", {
+          ascending: false,
+        });
 
       if (ordersError) {
         throw ordersError;
@@ -155,21 +149,19 @@ function Orders() {
       const { data, error: itemsError } =
         await supabase
           .from("order_items")
-          .select(
-            `
-              id,
-              order_id,
-              product_id,
-              product_code,
-              product_name,
-              content,
-              quantity,
-              actual_price,
-              discount_percentage,
-              selling_price,
-              item_total
-            `
-          )
+          .select(`
+            id,
+            order_id,
+            product_id,
+            product_code,
+            product_name,
+            content,
+            quantity,
+            actual_price,
+            discount_percentage,
+            selling_price,
+            item_total
+          `)
           .eq("order_id", order.id)
           .order("id", {
             ascending: true,
@@ -288,6 +280,13 @@ function Orders() {
     );
   }
 
+  /*
+   * =====================================================
+   * DOWNLOAD ORDER EXCEL
+   * EXISTING FUNCTIONALITY - KEPT
+   * =====================================================
+   */
+
   function downloadOrderExcel() {
     if (!selectedOrder) {
       return;
@@ -297,20 +296,28 @@ function Orders() {
       {
         "Order ID":
           selectedOrder.order_number,
+
         "Customer Name":
           selectedOrder.customer_name,
+
         "Mobile Number":
           selectedOrder.mobile_number,
+
         Email:
           selectedOrder.email || "",
+
         City:
           selectedOrder.city || "",
+
         State:
           selectedOrder.state || "",
+
         Address:
           selectedOrder.address || "",
+
         "Order Status":
           selectedOrder.order_status || "",
+
         "Order Date":
           formatDate(
             selectedOrder.created_at
@@ -322,24 +329,31 @@ function Orders() {
       (item) => ({
         "Product Code":
           item.product_code || "",
+
         "Product Name":
           item.product_name || "",
+
         Content:
           item.content || "",
+
         Quantity:
           Number(item.quantity || 0),
+
         "Actual Price":
           Number(
             item.actual_price || 0
           ),
+
         "Discount %":
           Number(
             item.discount_percentage || 0
           ),
+
         "Selling Price":
           Number(
             item.selling_price || 0
           ),
+
         "Item Total":
           Number(item.item_total || 0),
       })
@@ -347,25 +361,40 @@ function Orders() {
 
     const summaryRows = [
       {
-        "Actual Total": Number(
-          selectedOrder.subtotal || 0
-        ),
-        "Savings": Number(
-          selectedOrder.discount_amount ||
-            0
-        ),
-        "Product Total": Number(
-          selectedOrder.grand_total || 0
-        ) -
+        "Actual Total":
           Number(
-            selectedOrder.packing_charge || 0
+            selectedOrder.subtotal || 0
+          ) +
+          Number(
+            selectedOrder.discount_amount ||
+              0
           ),
-        "Packing Charge": Number(
-          selectedOrder.packing_charge || 0
-        ),
-        "Grand Total": Number(
-          selectedOrder.grand_total || 0
-        ),
+
+        Savings:
+          Number(
+            selectedOrder.discount_amount ||
+              0
+          ),
+
+        "Product Total":
+          Number(
+            selectedOrder.grand_total || 0
+          ) -
+          Number(
+            selectedOrder.packing_charge ||
+              0
+          ),
+
+        "Packing Charge":
+          Number(
+            selectedOrder.packing_charge ||
+              0
+          ),
+
+        "Grand Total":
+          Number(
+            selectedOrder.grand_total || 0
+          ),
       },
     ];
 
@@ -415,6 +444,55 @@ function Orders() {
     );
   }
 
+  /*
+   * =====================================================
+   * NEW - DOWNLOAD PRINTABLE BILL PDF
+   * =====================================================
+   */
+
+  function downloadOrderBill() {
+    if (!selectedOrder) {
+      return;
+    }
+
+    if (loadingDetails) {
+      return;
+    }
+
+    if (
+      !orderItems ||
+      orderItems.length === 0
+    ) {
+      alert(
+        "No products found for this order."
+      );
+      return;
+    }
+
+    try {
+      downloadOrderBillPdf(
+        selectedOrder,
+        orderItems
+      );
+    } catch (billError) {
+      console.error(
+        "Bill PDF error:",
+        billError
+      );
+
+      alert(
+        "Unable to generate the bill PDF. Please try again."
+      );
+    }
+  }
+
+  /*
+   * =====================================================
+   * WHATSAPP
+   * EXISTING FUNCTIONALITY - KEPT
+   * =====================================================
+   */
+
   function openWhatsApp() {
     if (!selectedOrder) {
       return;
@@ -454,7 +532,13 @@ function Orders() {
 
   return (
     <div className="orders-page">
+
+      {/* ========================= */}
+      {/* HEADER */}
+      {/* ========================= */}
+
       <div className="orders-header">
+
         <div>
           <span className="orders-label">
             SRI PRIYA TRADERS
@@ -483,9 +567,15 @@ function Orders() {
                 : ""
             }
           />
+
           Refresh
         </button>
+
       </div>
+
+      {/* ========================= */}
+      {/* ERROR */}
+      {/* ========================= */}
 
       {error && (
         <div className="orders-error">
@@ -493,8 +583,14 @@ function Orders() {
         </div>
       )}
 
+      {/* ========================= */}
+      {/* SEARCH */}
+      {/* ========================= */}
+
       <div className="orders-toolbar">
+
         <div className="orders-search">
+
           <Search size={18} />
 
           <input
@@ -510,12 +606,15 @@ function Orders() {
 
           {search && (
             <button
-              onClick={() => setSearch("")}
+              onClick={() =>
+                setSearch("")
+              }
               aria-label="Clear search"
             >
               <X size={16} />
             </button>
           )}
+
         </div>
 
         <div className="orders-count">
@@ -524,22 +623,35 @@ function Orders() {
             ? "order"
             : "orders"}
         </div>
+
       </div>
 
+      {/* ========================= */}
+      {/* ORDERS TABLE */}
+      {/* ========================= */}
+
       <div className="orders-table-card">
+
         {loading ? (
+
           <div className="orders-loading">
+
             <RefreshCw
               size={24}
               className="orders-refresh-spin"
             />
+
             <span>
               Loading orders...
             </span>
+
           </div>
+
         ) : filteredOrders.length ===
           0 ? (
+
           <div className="orders-empty">
+
             <Package size={38} />
 
             <strong>
@@ -550,11 +662,17 @@ function Orders() {
               Try another search or wait
               for a customer order.
             </span>
+
           </div>
+
         ) : (
+
           <div className="orders-table-wrapper">
+
             <table className="orders-table">
+
               <thead>
+
                 <tr>
                   <th>Order ID</th>
                   <th>Customer</th>
@@ -564,12 +682,16 @@ function Orders() {
                   <th>Total</th>
                   <th>Action</th>
                 </tr>
+
               </thead>
 
               <tbody>
+
                 {filteredOrders.map(
                   (order) => (
+
                     <tr key={order.id}>
+
                       <td>
                         <strong className="order-id">
                           {
@@ -579,7 +701,9 @@ function Orders() {
                       </td>
 
                       <td>
+
                         <div className="customer-cell">
+
                           <strong>
                             {
                               order.customer_name
@@ -590,7 +714,9 @@ function Orders() {
                             {order.city},{" "}
                             {order.state}
                           </span>
+
                         </div>
+
                       </td>
 
                       <td>
@@ -600,14 +726,19 @@ function Orders() {
                       </td>
 
                       <td>
+
                         <span className="order-date">
+
                           {formatDate(
                             order.created_at
                           )}
+
                         </span>
+
                       </td>
 
                       <td>
+
                         <span
                           className={`order-status ${getStatusClass(
                             order.order_status
@@ -617,17 +748,21 @@ function Orders() {
                             order.order_status
                           }
                         </span>
+
                       </td>
 
                       <td>
+
                         <strong>
                           {formatCurrency(
                             order.grand_total
                           )}
                         </strong>
+
                       </td>
 
                       <td>
+
                         <button
                           className="view-order-button"
                           onClick={() =>
@@ -637,29 +772,48 @@ function Orders() {
                           <Eye size={16} />
                           View
                         </button>
+
                       </td>
+
                     </tr>
+
                   )
                 )}
+
               </tbody>
+
             </table>
+
           </div>
+
         )}
+
       </div>
 
+      {/* ========================= */}
+      {/* ORDER DETAILS MODAL */}
+      {/* ========================= */}
+
       {selectedOrder && (
+
         <div
           className="order-modal-overlay"
           onClick={closeOrder}
         >
+
           <div
             className="order-modal"
             onClick={(event) =>
               event.stopPropagation()
             }
           >
+
+            {/* MODAL HEADER */}
+
             <div className="order-modal-header">
+
               <div>
+
                 <span>
                   ORDER DETAILS
                 </span>
@@ -669,6 +823,7 @@ function Orders() {
                     selectedOrder.order_number
                   }
                 </h2>
+
               </div>
 
               <button
@@ -677,134 +832,196 @@ function Orders() {
               >
                 <X size={22} />
               </button>
+
             </div>
 
+            {/* MODAL BODY */}
+
             <div className="order-modal-body">
+
+              {/* ========================= */}
+              {/* CUSTOMER + ADDRESS */}
+              {/* ========================= */}
+
               <div className="order-info-grid">
+
                 <div className="order-info-card">
+
                   <div className="order-info-title">
+
                     <User size={18} />
+
                     <strong>
                       Customer Information
                     </strong>
+
                   </div>
 
                   <div className="order-info-list">
+
                     <div>
+
                       <span>
                         Full Name
                       </span>
+
                       <strong>
                         {
                           selectedOrder.customer_name
                         }
                       </strong>
+
                     </div>
 
                     <div>
+
                       <span>
                         Mobile Number
                       </span>
+
                       <strong>
                         {
                           selectedOrder.mobile_number
                         }
                       </strong>
-                      </div>
+
+                    </div>
 
                     <div>
+
                       <span>
                         Email
                       </span>
+
                       <strong>
                         {
                           selectedOrder.email ||
                           "-"
                         }
                       </strong>
+
                     </div>
+
                   </div>
+
                 </div>
 
                 <div className="order-info-card">
+
                   <div className="order-info-title">
+
                     <MapPin size={18} />
+
                     <strong>
                       Delivery Address
                     </strong>
+
                   </div>
 
                   <div className="order-info-list">
+
                     <div>
+
                       <span>
                         City
                       </span>
+
                       <strong>
                         {
                           selectedOrder.city
                         }
                       </strong>
+
                     </div>
 
                     <div>
+
                       <span>
                         State
                       </span>
+
                       <strong>
                         {
                           selectedOrder.state
                         }
                       </strong>
+
                     </div>
 
                     <div>
+
                       <span>
                         Full Address
                       </span>
+
                       <strong>
                         {
                           selectedOrder.address
                         }
                       </strong>
+
                     </div>
+
                   </div>
+
                 </div>
+
               </div>
 
+              {/* ========================= */}
+              {/* ORDERED PRODUCTS */}
+              {/* ========================= */}
+
               <div className="order-products-section">
+
                 <div className="order-section-heading">
+
                   <div>
+
                     <h3>
                       Ordered Products
                     </h3>
+
                     <span>
                       {orderItems.length}{" "}
-                      product{" "}
+                      product
                       {orderItems.length ===
                       1
                         ? ""
                         : "s"}
                     </span>
+
                   </div>
+
                 </div>
 
                 {loadingDetails ? (
+
                   <div className="order-items-loading">
+
                     <RefreshCw
                       size={20}
                       className="orders-refresh-spin"
                     />
+
                     Loading products...
+
                   </div>
+
                 ) : (
+
                   <div className="order-items-wrapper">
+
                     {orderItems.map(
                       (item) => (
+
                         <div
                           className="order-item"
                           key={item.id}
                         >
+
                           <div className="order-item-main">
+
                             <strong>
                               {
                                 item.product_name
@@ -812,55 +1029,83 @@ function Orders() {
                             </strong>
 
                             <span>
+
                               {item.product_code ||
                                 "No code"}
+
                               {item.content
                                 ? ` • ${item.content}`
                                 : ""}
+
                             </span>
+
                           </div>
 
                           <div className="order-item-qty">
+
                             ×{" "}
                             {item.quantity}
+
                           </div>
 
                           <div className="order-item-price">
+
                             <span>
+
                               {formatCurrency(
                                 item.selling_price
                               )}{" "}
                               each
+
                             </span>
 
                             <strong>
+
                               {formatCurrency(
                                 item.item_total
                               )}
+
                             </strong>
+
                           </div>
+
                         </div>
+
                       )
                     )}
+
                   </div>
+
                 )}
+
               </div>
 
+              {/* ========================= */}
+              {/* SUMMARY + STATUS */}
+              {/* ========================= */}
+
               <div className="order-bottom-grid">
+
                 <div className="order-summary-card">
+
                   <div className="order-info-title">
+
                     <Package size={18} />
+
                     <strong>
                       Order Summary
                     </strong>
+
                   </div>
 
                   <div className="summary-row">
+
                     <span>
                       Actual Total
                     </span>
 
                     <strong>
+
                       {formatCurrency(
                         Number(
                           selectedOrder.subtotal ||
@@ -871,10 +1116,13 @@ function Orders() {
                               0
                           )
                       )}
+
                     </strong>
+
                   </div>
 
                   <div className="summary-row savings">
+
                     <span>
                       Savings
                     </span>
@@ -885,14 +1133,17 @@ function Orders() {
                         selectedOrder.discount_amount
                       )}
                     </strong>
+
                   </div>
 
                   <div className="summary-row">
+
                     <span>
                       Product Total
                     </span>
 
                     <strong>
+
                       {formatCurrency(
                         Number(
                           selectedOrder.grand_total ||
@@ -903,15 +1154,19 @@ function Orders() {
                               0
                           )
                       )}
+
                     </strong>
+
                   </div>
 
                   <div className="summary-row">
+
                     <span>
                       Packing Charge
                     </span>
 
                     <strong>
+
                       {Number(
                         selectedOrder.packing_charge ||
                           0
@@ -920,30 +1175,41 @@ function Orders() {
                         : formatCurrency(
                             selectedOrder.packing_charge
                           )}
+
                     </strong>
+
                   </div>
 
                   <div className="summary-total">
+
                     <span>
                       Grand Total
                     </span>
 
                     <strong>
+
                       {formatCurrency(
                         selectedOrder.grand_total
                       )}
+
                     </strong>
+
                   </div>
+
                 </div>
 
                 <div className="order-status-card">
+
                   <div className="order-info-title">
+
                     <CalendarDays
                       size={18}
                     />
+
                     <strong>
                       Order Status
                     </strong>
+
                   </div>
 
                   <label>
@@ -951,6 +1217,7 @@ function Orders() {
                   </label>
 
                   <div className="status-select-wrapper">
+
                     <select
                       value={
                         selectedOrder.order_status
@@ -964,32 +1231,49 @@ function Orders() {
                         updatingStatus
                       }
                     >
+
                       {ORDER_STATUSES.map(
                         (status) => (
+
                           <option
                             key={status}
                             value={status}
                           >
                             {status}
                           </option>
+
                         )
                       )}
+
                     </select>
 
                     <ChevronDown
                       size={17}
                     />
+
                   </div>
 
                   <span className="status-help">
+
                     Change the order status
                     as you process it.
+
                   </span>
+
                 </div>
+
               </div>
+
             </div>
 
+            {/* ========================= */}
+            {/* MODAL FOOTER */}
+            {/* ========================= */}
+
             <div className="order-modal-footer">
+
+              {/* EXISTING EXCEL BUTTON */}
+
               <button
                 className="download-order-button"
                 onClick={
@@ -1000,9 +1284,33 @@ function Orders() {
                   orderItems.length === 0
                 }
               >
+
                 <Download size={18} />
+
                 Download Excel
+
               </button>
+
+              {/* NEW BILL PDF BUTTON */}
+
+              <button
+                className="download-bill-button"
+                onClick={
+                  downloadOrderBill
+                }
+                disabled={
+                  loadingDetails ||
+                  orderItems.length === 0
+                }
+              >
+
+                <Download size={18} />
+
+                Download Bill PDF
+
+              </button>
+
+              {/* EXISTING WHATSAPP BUTTON */}
 
               <button
                 className="whatsapp-order-button"
@@ -1010,11 +1318,16 @@ function Orders() {
                   openWhatsApp
                 }
               >
+
                 <MessageCircle
                   size={18}
                 />
+
                 WhatsApp Customer
+
               </button>
+
+              {/* EXISTING CLOSE BUTTON */}
 
               <button
                 className="close-order-button"
@@ -1022,10 +1335,15 @@ function Orders() {
               >
                 Close
               </button>
+
             </div>
+
           </div>
+
         </div>
+
       )}
+
     </div>
   );
 }

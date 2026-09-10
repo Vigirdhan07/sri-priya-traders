@@ -682,3 +682,39 @@
     width: 100%;
   }
 }
+.download-bill-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 9px;
+  background: linear-gradient(
+    135deg,
+    #8b1020,
+    #a7192d
+  );
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.download-bill-button:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 20px rgba(139, 16, 32, 0.25);
+}
+
+.download-bill-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
