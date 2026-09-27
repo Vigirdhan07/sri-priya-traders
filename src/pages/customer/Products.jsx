@@ -1,19 +1,28 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 import { getProducts } from "../../services/productService";
 import ProductCard from "../../components/products/ProductCard";
+
+import { ShoppingCart } from "lucide-react";
+import { useCart } from "../../context/CartContext";
 
 import "./Products.css";
 
 function Products() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const categoryId = searchParams.get("category");
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const {
+    cartCount,
+    grandTotal,
+  } = useCart();
 
   useEffect(() => {
     async function loadProducts() {
@@ -106,6 +115,45 @@ function Products() {
           )}
 
       </div>
+
+      {/* =========================
+          LIVE CART SUMMARY
+      ========================= */}
+
+      {cartCount > 0 && (
+        <div className="products-cart-bar">
+
+          <div className="products-cart-info">
+
+            <span className="products-cart-count">
+              {cartCount}{" "}
+              {cartCount === 1 ? "Item" : "Items"}
+            </span>
+
+            <span className="products-cart-total">
+              Total: ₹
+              {Number(grandTotal || 0).toLocaleString(
+                "en-IN",
+                {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }
+              )}
+            </span>
+
+          </div>
+
+          <button
+            type="button"
+            className="products-cart-button"
+            onClick={() => navigate("/cart")}
+          >
+            <ShoppingCart size={19} strokeWidth={2.5} />
+            <span>View Order Estimate</span>
+          </button>
+
+        </div>
+      )}
 
     </section>
   );

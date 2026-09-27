@@ -1,0 +1,97 @@
+/* =========================================
+   SRI PRIYA TRADERS PROMOTIONAL POSTER
+========================================= */
+
+.spt-poster-section {
+  position: relative;
+  width: 100%;
+  padding: 45px 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Simple background matching the poster */
+  background: #111722;
+
+  overflow: hidden;
+}
+
+/* Very subtle warm glow */
+.spt-poster-section::before {
+  content: "";
+  position: absolute;
+
+  width: 700px;
+  height: 700px;
+
+  background: radial-gradient(
+    circle,
+    rgba(255, 190, 70, 0.08) 0%,
+    rgba(255, 190, 70, 0.03) 40%,
+    transparent 70%
+  );
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   POSTER
+========================================= */
+
+.spt-poster {
+  position: relative;
+  z-index: 1;
+
+  display: block;
+
+  width: min(100%, 620px);
+  height: auto;
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 15px 45px rgba(0, 0, 0, 0.35);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.spt-poster:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 20px 55px rgba(0, 0, 0, 0.45);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+  .spt-poster-section {
+    padding: 25px 12px;
+
+    background: #111722;
+  }
+
+  .spt-poster {
+    width: 100%;
+    border-radius: 12px;
+
+    box-shadow:
+      0 12px 35px rgba(0, 0, 0, 0.35);
+  }
+
+  .spt-poster:hover {
+    transform: none;
+  }
+}

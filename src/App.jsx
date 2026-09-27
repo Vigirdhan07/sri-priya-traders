@@ -1,15 +1,14 @@
 import { Routes, Route } from "react-router-dom";
-import Contact from "./pages/customer/Contact";
 
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 
 import Navbar from "./components/layout/Navbar";
-
 import Hero from "./components/layout/Hero";
 import Categories from "./components/products/Categories";
 import FeaturedProducts from "./components/products/FeaturedProducts";
 
+import Contact from "./pages/customer/Contact";
 import Products from "./pages/customer/Products";
 import CustomerPriceList from "./pages/customer/PriceList";
 import Cart from "./pages/customer/Cart";
@@ -19,6 +18,7 @@ import OrderSuccess from "./pages/customer/OrderSuccess";
 
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminRoute from "./pages/admin/AdminRoute";
+import AdminLayout from "./components/admin/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import Orders from "./pages/admin/Orders";
 import AdminProducts from "./pages/admin/Products";
@@ -27,15 +27,28 @@ import AdminCategories from "./pages/admin/Categories";
 import PriceList from "./pages/admin/PriceList";
 import Settings from "./pages/admin/Settings";
 
-import AdminLayout from "./components/admin/AdminLayout";
-
 import "./App.css";
+import "./HomePoster.css";
 
 function Home() {
   return (
     <>
+      {/* Main Hero */}
       <Hero />
+
+      {/* Sri Priya Traders Promotional Poster */}
+      <section className="spt-poster-section">
+        <img
+          src="/images/spt-poster.jpeg"
+          alt="Sri Priya Traders - Premium Sivakasi Crackers"
+          className="spt-poster"
+        />
+      </section>
+
+      {/* Product Categories */}
       <Categories />
+
+      {/* Featured Products */}
       <FeaturedProducts />
     </>
   );
@@ -47,23 +60,15 @@ function CustomerLayout() {
       <Navbar />
 
       <Routes>
-        <Route
-          path="/"
-          element={<Home />}
-        />
+        <Route path="/" element={<Home />} />
 
-        <Route
-          path="/products"
-          element={<Products />}
-        />
+        <Route path="/products" element={<Products />} />
 
-        {/* CUSTOMER PRICE LIST */}
         <Route
           path="/price-list"
           element={<CustomerPriceList />}
         />
 
-        {/* CONTACT */}
         <Route
           path="/contact"
           element={<Contact />}
@@ -99,19 +104,13 @@ function App() {
       <CartProvider>
         <Routes>
 
-          {/* ========================= */}
-          {/* ADMIN LOGIN */}
-          {/* ========================= */}
-
+          {/* Admin Login */}
           <Route
             path="/admin"
             element={<AdminLogin />}
           />
 
-          {/* ========================= */}
-          {/* PROTECTED ADMIN AREA */}
-          {/* ========================= */}
-
+          {/* Protected Admin Area */}
           <Route element={<AdminRoute />}>
             <Route
               path="/admin/*"
@@ -132,7 +131,6 @@ function App() {
                 element={<AdminProducts />}
               />
 
-              {/* ADMIN IMAGES */}
               <Route
                 path="images"
                 element={<ManageImages />}
@@ -143,7 +141,6 @@ function App() {
                 element={<AdminCategories />}
               />
 
-              {/* ADMIN PRICE LIST */}
               <Route
                 path="price-list"
                 element={<PriceList />}
@@ -156,10 +153,7 @@ function App() {
             </Route>
           </Route>
 
-          {/* ========================= */}
-          {/* CUSTOMER WEBSITE */}
-          {/* ========================= */}
-
+          {/* Customer Website */}
           <Route
             path="/*"
             element={<CustomerLayout />}
